@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💘 Valentine?</title>
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    font-family: 'Comic Sans MS', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .card {
+    background: white;
+    padding: 30px 20px;
+    border-radius: 25px;
+    text-align: center;
+    width: 90%;
+    max-width: 350px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  .from {
+    font-size: 0.9rem;
+    color: #ff4081;
+    margin-bottom: 10px;
+  }
+
+  .typing {
+    font-size: 1rem;
+    margin: 15px 0;
+    min-height: 24px;
+  }
+
+  button {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+    transition: all 0.3s ease;
+  }
+
+  #yesBtn {
+    background: #ff4081;
+    color: white;
+  }
+
+  #noBtn {
+    background: #444;
+    color: white;
+    position: absolute;
+  }
+
+  .hidden { display: none; }
+
+  .shake {
+    animation: shake 0.4s;
+  }
+
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_6d2c7e36c3.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card" id="card">
+  <div class="from">— From Prajwal 💖</div>
+  <h1>Will you be my Valentine? 💘</h1>
+  <div class="typing" id="typing"></div>
+  <button id="yesBtn">Yes 💖</button>
+  <button id="noBtn">No 🙄</button>
+</div>
+
+<script>
+  const typingText = [
+    "Thinking 🤔",
+    "Still thinking… 😳",
+    "Brain loading… 🧠💭",
+    "YES 😌💖"
+  ];
+
+  const typingDiv = document.getElementById("typing");
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const music = document.getElementById("bgMusic");
+
+  let textIndex = 0;
+  let charIndex = 0;
+  let noCount = 0;
+
+  function typeEffect() {
+    if (charIndex < typingText[textIndex].length) {
+      typingDiv.textContent += typingText[textIndex][charIndex++];
+      setTimeout(typeEffect, 80);
+    } else {
+      setTimeout(() => {
+        typingDiv.textContent = "";
+        charIndex = 0;
+        textIndex = (textIndex + 1) % typingText.length;
+        typeEffect();
+      }, 800);
+    }
+  }
+
+  typeEffect();
+
+  document.body.addEventListener("click", () => {
+    music.play().catch(()=>{});
+  }, { once: true });
+
+  function moveNo() {
+    noCount++;
+
+    if (noCount >= 4) {
+      alert("😏 Wowww thanks for saying YES 💖\n\nNo button has officially retired 🚫😂");
+      noBtn.classList.add("hidden");
+      return;
+    }
+
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 120);
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+    noBtn.style.transform = `scale(${1 - noCount * 0.15}) rotate(${noCount * 30}deg)`;
+    noBtn.classList.add("shake");
+
+    setTimeout(() => noBtn.classList.remove("shake"), 400);
+  }
+
+  noBtn.addEventListener("mouseover", moveNo);
+  noBtn.addEventListener("click", moveNo);
+
+  yesBtn.addEventListener("click", () => {
+    document.body.innerHTML = `
+      <div style="color:white; text-align:center; padding:30px;">
+        <h1>🎉🥰 YAYYYY 🥰🎉</h1>
+        <p style="font-size:1.2rem;">
+          You just made my day 💖<br><br>
+          Sooo… how about a date? 😌<br><br>
+          🍕 Food &nbsp; ☕ Coffee &nbsp; 🎬 Movie<br><br>
+          — Your Valentine,<br>
+          <strong>Prajwal 💘</strong>
+        </p>
+      </div>
+    `;
+  });
+</script>
+
+</body>
+</html>
