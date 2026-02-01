@@ -6,168 +6,150 @@
 <title>💘 Valentine?</title>
 
 <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(135deg, #ff758c, #ff7eb3);
-    font-family: 'Comic Sans MS', cursive;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  .card {
-    background: white;
-    padding: 30px 20px;
-    border-radius: 25px;
-    text-align: center;
-    width: 90%;
-    max-width: 350px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  }
-
-  h1 {
-    font-size: 1.6rem;
-  }
-
-  .from {
-    font-size: 0.9rem;
-    color: #ff4081;
-    margin-bottom: 10px;
-  }
-
-  .typing {
-    font-size: 1rem;
-    margin: 15px 0;
-    min-height: 24px;
-  }
-
-  button {
-    padding: 12px 24px;
-    font-size: 1.1rem;
-    border-radius: 15px;
-    border: none;
-    cursor: pointer;
-    margin: 10px;
-    transition: all 0.3s ease;
-  }
-
-  #yesBtn {
-    background: #ff4081;
-    color: white;
-  }
-
-  #noBtn {
-    background: #444;
-    color: white;
-    position: absolute;
-  }
-
-  .hidden { display: none; }
-
-  .shake {
-    animation: shake 0.4s;
-  }
-
-  @keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
-  }
+body{
+  margin:0;
+  height:100vh;
+  background:linear-gradient(135deg,#ff4b7d,#ff8fab);
+  font-family:'Comic Sans MS',cursive;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+.card{
+  background:#fff;
+  padding:25px;
+  border-radius:25px;
+  width:90%;
+  max-width:360px;
+  text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+}
+h1{font-size:1.5rem;}
+.from{color:#ff4081;font-size:.9rem;margin-bottom:8px;}
+.typing{min-height:22px;margin:10px 0;}
+button{
+  padding:12px 24px;
+  font-size:1.1rem;
+  border:none;
+  border-radius:15px;
+  margin:10px;
+  cursor:pointer;
+  transition:.3s;
+}
+#yes{background:#ff4081;color:#fff;}
+#no{
+  background:#333;
+  color:#fff;
+  position:absolute;
+}
+.hidden{display:none;}
+.shake{animation:shake .4s;}
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-6px)}
+  50%{transform:translateX(6px)}
+  75%{transform:translateX(-6px)}
+  100%{transform:translateX(0)}
+}
+.chat{
+  background:#fff;
+  border-radius:20px;
+  padding:20px;
+  width:90%;
+  max-width:380px;
+}
+.msg{
+  background:#eee;
+  padding:10px 14px;
+  border-radius:15px;
+  margin:8px 0;
+  max-width:80%;
+}
+.you{background:#dcf8c6;margin-left:auto;}
+.sys{font-size:.8rem;color:#555;text-align:center;}
 </style>
 </head>
 
 <body>
 
-<audio id="bgMusic" loop>
-  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_6d2c7e36c3.mp3" type="audio/mpeg">
+<audio id="music" loop>
+<source src="https://cdn.pixabay.com/audio/2022/03/15/audio_6d2c7e36c3.mp3">
 </audio>
 
 <div class="card" id="card">
   <div class="from">— From Prajwal 💖</div>
   <h1>Will you be my Valentine? 💘</h1>
   <div class="typing" id="typing"></div>
-  <button id="yesBtn">Yes 💖</button>
-  <button id="noBtn">No 🙄</button>
+  <button id="yes">Yes 💖</button>
+  <button id="no">No 🙄</button>
 </div>
 
 <script>
-  const typingText = [
-    "Thinking 🤔",
-    "Still thinking… 😳",
-    "Brain loading… 🧠💭",
-    "YES 😌💖"
-  ];
+const texts=[
+ "Thinking 🤔",
+ "Still thinking… 😳",
+ "Heart loading… 💓",
+ "YES 😌💖"
+];
+let ti=0,ci=0;
+const typing=document.getElementById("typing");
+function type(){
+ if(ci<texts[ti].length){
+  typing.textContent+=texts[ti][ci++];
+  setTimeout(type,70);
+ }else{
+  setTimeout(()=>{
+   typing.textContent="";
+   ci=0;ti=(ti+1)%texts.length;
+   type();
+  },700);
+ }
+}
+type();
 
-  const typingDiv = document.getElementById("typing");
-  const yesBtn = document.getElementById("yesBtn");
-  const noBtn = document.getElementById("noBtn");
-  const music = document.getElementById("bgMusic");
+const music=document.getElementById("music");
+document.body.addEventListener("click",()=>music.play().catch(()=>{}),{once:true});
 
-  let textIndex = 0;
-  let charIndex = 0;
-  let noCount = 0;
+const no=document.getElementById("no");
+let noCount=0;
+function evilNo(){
+ noCount++;
+ if(noCount>=4){
+  alert("ERROR 404 ❌\n'NO' not found in this relationship 😌💖");
+  no.classList.add("hidden");
+  return;
+ }
+ const x=Math.random()*(innerWidth-120);
+ const y=Math.random()*(innerHeight-120);
+ no.style.left=x+"px";
+ no.style.top=y+"px";
+ no.style.transform=`scale(${1-noCount*.15}) rotate(${noCount*30}deg)`;
+ no.classList.add("shake");
+ setTimeout(()=>no.classList.remove("shake"),400);
+}
+no.addEventListener("mouseover",evilNo);
+no.addEventListener("click",evilNo);
 
-  function typeEffect() {
-    if (charIndex < typingText[textIndex].length) {
-      typingDiv.textContent += typingText[textIndex][charIndex++];
-      setTimeout(typeEffect, 80);
-    } else {
-      setTimeout(() => {
-        typingDiv.textContent = "";
-        charIndex = 0;
-        textIndex = (textIndex + 1) % typingText.length;
-        typeEffect();
-      }, 800);
-    }
-  }
+document.getElementById("yes").onclick=()=>{
+ document.body.innerHTML=`
+ <div style="color:white;text-align:center">
+  <h2>🔍 Scanning compatibility…</h2>
+  <p>✔ Cute detected<br>✔ Smile detected<br>✔ Valentine detected 💘</p>
+ </div>`;
+ setTimeout(showChat,2000);
+};
 
-  typeEffect();
-
-  document.body.addEventListener("click", () => {
-    music.play().catch(()=>{});
-  }, { once: true });
-
-  function moveNo() {
-    noCount++;
-
-    if (noCount >= 4) {
-      alert("😏 Wowww thanks for saying YES Shalini..💖\n\nNo button has officially retired 🚫😂");
-      noBtn.classList.add("hidden");
-      return;
-    }
-
-    const x = Math.random() * (window.innerWidth - 120);
-    const y = Math.random() * (window.innerHeight - 120);
-
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-    noBtn.style.transform = `scale(${1 - noCount * 0.15}) rotate(${noCount * 30}deg)`;
-    noBtn.classList.add("shake");
-
-    setTimeout(() => noBtn.classList.remove("shake"), 400);
-  }
-
-  noBtn.addEventListener("mouseover", moveNo);
-  noBtn.addEventListener("click", moveNo);
-
-  yesBtn.addEventListener("click", () => {
-    document.body.innerHTML = `
-      <div style="color:white; text-align:center; padding:30px;">
-        <h1>🎉🥰 YAYYYY 🥰🎉</h1>
-        <p style="font-size:1.2rem;">
-          You just made my day 💖<br><br>
-          Sooo… how about a date? 😌<br><br>
-          🍕 Food &nbsp; ☕ Coffee &nbsp; 🎬 Movie<br><br>
-          — Your Valentine,<br>
-          <strong>Prajwal 💘</strong>
-        </p>
-      </div>
-    `;
-  });
+function showChat(){
+ document.body.innerHTML=`
+ <div class="chat">
+  <div class="msg">Will you be my Valentine? 💘</div>
+  <div class="msg you">Yes ❤️</div>
+  <div class="sys">Relationship status updated ✔</div>
+  <div class="msg you">Screenshot this & send me 😌📸</div>
+  <div class="sys">— Prajwal 💖</div>
+ </div>`;
+}
 </script>
 
 </body>
